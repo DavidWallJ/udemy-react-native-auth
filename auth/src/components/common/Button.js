@@ -1,13 +1,18 @@
+/**
+ * Created by david on 7/17/17.
+ */
 import React from 'react';
 import { Text, TouchableOpacity } from 'react-native';
 
-const Button = ({ onPress, children }) => {
+// 'onPress' is being pulled off of props
+// 'onPress' is defined up in 'AlbumDetails'
+// you could also just pass down the children prop instead of the text prop since there is only text inside the button
+const Button = ( { onPress, text }) => {
   const { buttonStyle, textStyle } = styles;
-
   return (
-    <TouchableOpacity onPress={onPress} style={buttonStyle}>
+    <TouchableOpacity onPress={ onPress } style={buttonStyle}>
       <Text style={textStyle}>
-        {children}
+        { text }
       </Text>
     </TouchableOpacity>
   );
@@ -23,7 +28,9 @@ const styles = {
     paddingBottom: 10
   },
   buttonStyle: {
+    // flex 1 expands the button
     flex: 1,
+    // flex box stretch to fill the limits of the container
     alignSelf: 'stretch',
     backgroundColor: '#fff',
     borderRadius: 5,
@@ -35,3 +42,4 @@ const styles = {
 };
 
 export { Button };
+
