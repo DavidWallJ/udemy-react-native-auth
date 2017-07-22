@@ -1,12 +1,12 @@
-import React, { Component } from 'react'
-import { View } from 'react-native'
-import firebase from 'firebase'
-import { Header, Button, Card, CardSection, Spinner } from './components/common'
-import LoginForm from './components/LoginForm'
+import React, { Component } from 'react';
+import { View } from 'react-native';
+import firebase from 'firebase';
+import { Header, Button, Card, CardSection, Spinner } from './components/common';
+import LoginForm from './components/LoginForm';
 
 class App extends Component {
   // null means we're not sure
-  // a state we can use for loggin in (...loading)
+  // a state we can use for logging in (...loading)
   state = {loggedIn: null}
 
   componentWillMount () {
@@ -39,7 +39,10 @@ class App extends Component {
         return (
           <Card>
             <CardSection>
-              <Button text="Log Out"/>
+              <Button
+                text="Log Out"
+                onPress={() => firebase.auth().signOut()}
+              />
             </CardSection>
           </Card>
         )
@@ -47,11 +50,9 @@ class App extends Component {
         return <LoginForm/>
       default:
         return (
-          <Card>
-            <CardSection>
+          <View>
               <Spinner size="large"/>
-            </CardSection>
-          </Card>
+          </View>
         )
     }
   }
@@ -59,11 +60,12 @@ class App extends Component {
   render () {
     return (
       <View>
-        <Header headerText="Authentication"/>
+        <Header headerText="Authentication" style={styles.center}/>
         {this.renderContent()}
       </View>
     )
   }
 }
+
 
 export default App
