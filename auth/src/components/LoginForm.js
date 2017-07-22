@@ -1,31 +1,56 @@
-import React, { Component } from 'react'
-import { Text } from 'react-native'
-import firebase from 'firebase'
-import { Button, Card, CardSection, Input } from './common'
+import React, { Component } from 'react';
+import { Text } from 'react-native';
+import firebase from 'firebase';
+import { Button, Card, CardSection, Input, Spinner } from './common';
 
 class LoginForm extends Component {
   state = {
     email: '',
     password: '',
-    error: ''
+    error: '',
+    loading: false
   }
 
   onButtonPress () {
     const {email, password} = this.state;
 
-    this.setState({ error: '' });
+    this.setState({ error: '', loading: true });
 
     firebase.auth().signInWithEmailAndPassword(email, password)
+      .then(this.onLoginSuccess.bind(this))
       .catch( (err) => {
         console.log(err);
         firebase.auth().createUserWithEmailAndPassword(email, password)
-          .catch( (err) => {
-            console.log(err);
-            this.setState({ error: err.message });
-          })
-      })
+          .then(this.onLoginSuccess.bind(this))
+          .catch(this.onLoginFail.bind(this));
+      });
 
   }
+
+  onLoginSuccess() {
+    this.setState( {
+      email: '',
+      password: '',
+      error: '',
+      loading: false
+    });
+  }
+
+  // if this doesn't work go back to video: 'clearing the form spinner'
+  onLoginFail() {
+    this.setState({ error: 'Authentication Failed', loading: false });
+  }
+
+  renderButton() {
+    if (this.state.loading) {
+      return <Spinner size="small"/>
+    }
+
+    return <Button
+        onPress={this.onButtonPress.bind(this)}
+        text="Log In"
+      />
+    }
 
   // the onChangeHandler contains a function that will be passed an argument when evoked, 'email'.
   // 'email' will be what ever the 'onChangeText' event contains in 'Input.js'
@@ -59,10 +84,7 @@ class LoginForm extends Component {
         </Text>
 
         <CardSection>
-          <Button
-            onPress={this.onButtonPress.bind(this)}
-            text="Log In"
-          />
+          {this.renderButton()}
         </CardSection>
       </Card>
     )
